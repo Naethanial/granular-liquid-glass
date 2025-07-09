@@ -1,114 +1,180 @@
-# Liquid Glass React
+# Granular Liquid Glass React
 
-Apple's Liquid Glass effect for React.
+A React component that recreates Apple’s "liquid glass." You know what it is.
 
-Card Example              |  Button Example
-:-------------------------:|:-------------------------:
-![](https://github.com/rdev/liquid-glass-react/raw/master/assets/card.png)  |  ![](https://github.com/rdev/liquid-glass-react/raw/master/assets/button.png)
+> **Note:** This project is a fork of [rdev/liquid-glass-react](https://github.com/rdev/liquid-glass-react). All credit for the original idea and implementation goes to the upstream author. My fork focuses on maintenance, configurability, and documentation.
 
-## 🎬  Demo
+---
 
-[Click here](https://liquid-glass.maxrovensky.com) to see it in action!
+## Preview
 
-![project liquid gif](./assets/project-liquid.gif)
+| Card Example | Button Example |
+|:------------:|:--------------:|
+| ![Card](https://github.com/user-attachments/assets/3fee564c-a1fc-442b-bffb-8fe5ea234e64) | ![Button](https://github.com/user-attachments/assets/a54984d2-971d-495e-9d1e-afaa1ebe48a3) |
 
-## ✨ Features
+## Live Demo
 
-- Proper edgy bending and refraction
-- Multiple refraction modes
-- Configurable frosty level
-- Supports arbitrary child elements
-- Configurable paddings
-- Correct hover and click effects
-- Edges and highlights take on the underlying light like Apple's does
-- Configurable chromatic aberration
-- Configurable elasticity, to mimic Apple's "liquid" feel
+A live demo is available at the original author’s site: <https://liquid-glass.maxrovensky.com>
 
-> **⚠️ NOTE:** Safari and Firefox only partially support the effect (displacement will not be visible)
+---
 
-## 🚀 Usage
+## Features
 
-### Installation
+- Liquid-glass distortion with edge bending & refraction
+- Chromatic aberration
+- Four refraction modes: `standard`, `polar`, `prominent`, `shader`
+- Adjustable blur / frost, saturation, corner-radius & padding
+- Mouse tracking with optional external container
+- Elastic animations for touch & cursor interactions
+- Works on both light and dark backgrounds
+
+---
+
+## Installation
 
 ```bash
-npm install liquid-glass-react
+# once published on npm
+npm install granular-liquid-glass
+
+# – or – clone & build locally
+ git clone https://github.com/Naethanial/granular-liquid-glass.git
+ cd granular-liquid-glass
+ npm install && npm run build
 ```
 
-### Basic Usage
+### Using the source directly
 
 ```tsx
-import LiquidGlass from 'liquid-glass-react'
+// After cloning the repo
+import LiquidGlass from "./path/to/granular-liquid-glass/src";
+```
+
+---
+
+## Usage
+
+### Basic
+
+```tsx
+import LiquidGlass from 'granular-liquid-glass';
 
 function App() {
   return (
     <LiquidGlass>
-      <div className="p-6">
-        <h2>Your content here</h2>
-        <p>This will have the liquid glass effect</p>
-      </div>
+      <h1>Hello, Glass!</h1>
+      <p>This content is refracted through liquid glass!</p>
     </LiquidGlass>
-  )
+  );
 }
 ```
 
-### Button Example
+### Interactive Button
 
 ```tsx
-<LiquidGlass
-  displacementScale={64}
-  blurAmount={0.1}
-  saturation={130}
-  aberrationIntensity={2}
-  elasticity={0.35}
-  cornerRadius={100}
-  padding="8px 16px"
-  onClick={() => console.log('Button clicked!')}
->
-  <span className="text-white font-medium">Click Me</span>
+<LiquidGlass onClick={() => alert('Glass button clicked!')} className="inline-flex cursor-pointer px-6 py-3">
+  Click Me
 </LiquidGlass>
 ```
 
-### Mouse Container Example
-
-When you want the glass effect to respond to mouse movement over a larger area (like a parent container), use the `mouseContainer` prop:
+### Card
 
 ```tsx
-function App() {
-  const containerRef = useRef<HTMLDivElement>(null)
+<LiquidGlass className="w-72 flex-col gap-2">
+  <h2 className="font-semibold">Glass Card</h2>
+  <p>Beautiful glass morphism effect with proper light refraction.</p>
+  <button className="mt-auto">Action</button>
+</LiquidGlass>
+```
+
+### Custom Mouse Container
+
+```tsx
+import { useRef } from 'react';
+
+function Example() {
+  const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={containerRef} className="w-full h-screen bg-image">
-      <LiquidGlass
-        mouseContainer={containerRef}
-        elasticity={0.3}
-        style={{ position: 'fixed', top: '50%', left: '50%' }}
-      >
-        <div className="p-6">
-          <h2>Glass responds to mouse anywhere in the container</h2>
-        </div>
+    <div ref={containerRef} className="relative h-96">
+      <LiquidGlass mouseContainer={containerRef} className="absolute inset-0 flex items-center justify-center">
+        Responds to mouse anywhere in the container
       </LiquidGlass>
     </div>
-  )
+  );
 }
 ```
+
+### Refraction Modes
+
+```tsx
+// Default
+<LiquidGlass mode="standard">Standard refraction</LiquidGlass>
+
+// Radial distortion
+<LiquidGlass mode="polar">Polar refraction</LiquidGlass>
+
+// Stronger edge effect
+<LiquidGlass mode="prominent">Prominent refraction</LiquidGlass>
+
+// Highest fidelity (experimental)
+<LiquidGlass mode="shader">Shader-based refraction</LiquidGlass>
+```
+
+---
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `children` | `React.ReactNode` | - | The content to render inside the glass container |
-| `displacementScale` | `number` | `70` | Controls the intensity of the displacement effect |
-| `blurAmount` | `number` | `0.0625` | Controls the blur/frosting level |
-| `saturation` | `number` | `140` | Controls color saturation of the glass effect |
-| `aberrationIntensity` | `number` | `2` | Controls chromatic aberration intensity |
-| `elasticity` | `number` | `0.15` | Controls the "liquid" elastic feel (0 = rigid, higher = more elastic) |
-| `cornerRadius` | `number` | `999` | Border radius in pixels |
+| `children` | `React.ReactNode` | **required** | Content rendered inside the glass |
+| `displacementScale` | `number` | `70` | Distortion intensity |
+| `blurAmount` | `number` | `0.0625` | Frost/blur level (0 = clear) |
+| `saturation` | `number` | `140` | Color saturation (%) |
+| `aberrationIntensity` | `number` | `2` | Chromatic aberration intensity |
+| `elasticity` | `number` | `0.15` | How “liquid” the glass moves |
+| `cornerRadius` | `number` | `999` | Border-radius (px) |
 | `className` | `string` | `""` | Additional CSS classes |
-| `padding` | `string` | - | CSS padding value |
-| `style` | `React.CSSProperties` | - | Additional inline styles |
-| `overLight` | `boolean` | `false` | Whether the glass is over a light background |
-| `onClick` | `() => void` | - | Click handler |
-| `mouseContainer` | `React.RefObject<HTMLElement \| null> \| null` | `null` | Container element to track mouse movement on (defaults to the glass component itself) |
-| `mode` | `"standard" \| "polar" \| "prominent" \| "shader"` | `"standard"` | Refraction mode for different visual effects. `shader` is the most accurate but not the most stable. |
-| `globalMousePos` | `{ x: number; y: number }` | - | Global mouse position coordinates for manual control |
-| `mouseOffset` | `{ x: number; y: number }` | - | Mouse position offset for fine-tuning positioning |
+| `padding` | `string` | `"24px 32px"` | Padding inside the glass |
+| `style` | `React.CSSProperties` | `{}` | Inline styles |
+| `overLight` | `boolean` | `false` | Set to `true` when on light background |
+| `onClick` | `() => void` | — | Click handler |
+| `mouseContainer` | `React.RefObject` | — | Track mouse movement on this container |
+| `mode` | `'standard' \| 'polar' \| 'prominent' \| 'shader'` | `'standard'` | Refraction mode |
+| `globalMousePos` | `{ x: number; y: number }` | — | Manually supply mouse position |
+| `mouseOffset` | `{ x: number; y: number }` | — | Fine-tune mouse offset |
+
+---
+
+## Development
+
+```bash
+# build the library
+npm install
+npm run build
+
+# run the Next.js example
+cd liquid-glass-example
+npm install
+npm run dev  # http://localhost:3000
+```
+
+---
+
+## Browser Support
+
+| Browser  | Displacement | Backdrop Filter | Overall |
+|----------|:------------:|:---------------:|:-------:|
+| Chrome   | ✅ | ✅ | **Best** |
+| Edge     | ✅ | ✅ | **Best** |
+| Safari   | ⚠️ Partial | ✅ | Good |
+| Firefox  | ❌ | ✅ | Limited |
+
+---
+
+## Contributing
+
+Pull requests and issue reports are welcome! 
+
+## License
+
+[MIT](LICENSE)
