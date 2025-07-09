@@ -1,7 +1,7 @@
 {
-  "name": "liquid-glass-react",
-  "version": "1.1.1",
-  "description": "Apple's Liquid Glass effect for React",
+  "name": "liquid-glass-react-tint",
+  "version": "1.0.0",
+  "description": "Apple's Liquid Glass effect for React with tint",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",

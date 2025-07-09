@@ -1,6 +1,6 @@
 import { Geist } from "next/font/google"
 import { useState, useRef } from "react"
-import LiquidGlass from "liquid-glass-react"
+import LiquidGlass from "../../liquid-glass-react-src/index"
 import { LogOutIcon, Github } from "lucide-react"
 
 const geistSans = Geist({
@@ -11,23 +11,35 @@ const geistSans = Geist({
 export default function Home() {
   // User Info Card Controls
   const [displacementScale, setDisplacementScale] = useState(100)
-  const [blurAmount, setBlurAmount] = useState(0.5)
+  const [blurAmount, setBlurAmount] = useState(8)
   const [saturation, setSaturation] = useState(140)
   const [aberrationIntensity, setAberrationIntensity] = useState(2)
   const [elasticity, setElasticity] = useState(0)
   const [cornerRadius, setCornerRadius] = useState(32)
   const [userInfoOverLight, setUserInfoOverLight] = useState(false)
   const [userInfoMode, setUserInfoMode] = useState<"standard" | "polar" | "prominent" | "shader">("standard")
+  const [userInfoOverlayColor, setUserInfoOverlayColor] = useState({ r: 128, g: 128, b: 255 })
+  const [userInfoOverlayAmount, setUserInfoOverlayAmount] = useState(0.3)
+  const [userInfoOverlayBlendMode, setUserInfoOverlayBlendMode] = useState("overlay")
+  
+  // Over Light Effect Controls
+  const [autoOverLight, setAutoOverLight] = useState(true)
+  const [overLightBlurAmount, setOverLightBlurAmount] = useState(8)
+  const [overLightDarkTint, setOverLightDarkTint] = useState(0.2)
+  const [overLightShadowAmount, setOverLightShadowAmount] = useState(0.75)
 
   // Log Out Button Controls
   const [logoutDisplacementScale, setLogoutDisplacementScale] = useState(64)
-  const [logoutBlurAmount, setLogoutBlurAmount] = useState(0.1)
+  const [logoutBlurAmount, setLogoutBlurAmount] = useState(4)
   const [logoutSaturation, setLogoutSaturation] = useState(130)
   const [logoutAberrationIntensity, setLogoutAberrationIntensity] = useState(2)
   const [logoutElasticity, setLogoutElasticity] = useState(0.35)
   const [logoutCornerRadius, setLogoutCornerRadius] = useState(100)
   const [logoutOverLight, setLogoutOverLight] = useState(false)
   const [logoutMode, setLogoutMode] = useState<"standard" | "polar" | "prominent" | "shader">("standard")
+  const [logoutOverlayColor, setLogoutOverlayColor] = useState({ r: 255, g: 128, b: 128 })
+  const [logoutOverlayAmount, setLogoutOverlayAmount] = useState(0.3)
+  const [logoutOverlayBlendMode, setLogoutOverlayBlendMode] = useState("overlay")
 
   // Shared state
   const [activeTab, setActiveTab] = useState<"userInfo" | "logOut">("userInfo")
@@ -80,8 +92,14 @@ export default function Home() {
               elasticity={elasticity}
               cornerRadius={cornerRadius}
               mouseContainer={containerRef}
-              overLight={scrollingOverBrightSection || userInfoOverLight}
+              overLight={(autoOverLight && scrollingOverBrightSection) || userInfoOverLight}
+              overLightBlurAmount={overLightBlurAmount}
+              overLightDarkTint={overLightDarkTint}
+              overLightShadowAmount={overLightShadowAmount}
               mode={userInfoMode}
+              overlayColor={userInfoOverlayColor}
+              overlayAmount={userInfoOverlayAmount}
+              overlayBlendMode={userInfoOverlayBlendMode}
               style={{
                 position: "fixed",
                 top: "25%",
@@ -126,8 +144,14 @@ export default function Home() {
             elasticity={logoutElasticity}
             cornerRadius={logoutCornerRadius}
             mouseContainer={containerRef}
-            overLight={scrollingOverBrightSection || logoutOverLight}
+            overLight={(autoOverLight && scrollingOverBrightSection) || logoutOverLight}
+            overLightBlurAmount={overLightBlurAmount}
+            overLightDarkTint={overLightDarkTint}
+            overLightShadowAmount={overLightShadowAmount}
             mode={logoutMode}
+            overlayColor={logoutOverlayColor}
+            overlayAmount={logoutOverlayAmount}
+            overlayBlendMode={logoutOverlayBlendMode}
             padding="8px 16px"
             onClick={() => {
               console.log("Logged out")
@@ -151,7 +175,7 @@ export default function Home() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold text-white">Glassy Boi but Web</h2>
-            <a href="https://github.com/rdev/liquid-glass-react" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg" title="View on GitHub">
+            <a href="https://github.com/Naethanial/granular-liquid-glass" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg" title="View on GitHub">
               <Github className="w-6 h-6" />
             </a>
           </div>
@@ -177,6 +201,81 @@ export default function Home() {
         </div>
 
         <div className="space-y-8 flex-1">
+          {/* Over Light Effects Section */}
+          <div className="bg-white/5 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-white mb-4">Over Light Effects</h3>
+            <p className="text-xs text-white/50 mb-4">Global settings for bright background adaptation</p>
+            
+            <div className="space-y-4">
+              <div>
+                <div className="flex items-center space-x-3">
+                  <input 
+                    type="checkbox" 
+                    id="autoOverLight" 
+                    checked={autoOverLight} 
+                    onChange={(e) => setAutoOverLight(e.target.checked)} 
+                    className="w-5 h-5 accent-blue-500" 
+                  />
+                  <label htmlFor="autoOverLight" className="text-sm text-white/90">
+                    Auto-enable when scrolling over bright sections
+                  </label>
+                </div>
+                <p className="text-xs text-white/50 mt-2">Automatically applies over light effects when scrolling over bright content</p>
+              </div>
+
+              <div>
+                <span className="block text-sm font-semibold text-white/90 mb-3">Extra Blur Amount</span>
+                <div className="mb-2">
+                  <span className="text-xl font-mono text-blue-300">{overLightBlurAmount}px</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="20" 
+                  step="1" 
+                  value={overLightBlurAmount} 
+                  onChange={(e) => setOverLightBlurAmount(Number(e.target.value))} 
+                  className="w-full" 
+                />
+                <p className="text-xs text-white/50 mt-2">Additional blur applied when over light is active</p>
+              </div>
+
+              <div>
+                <span className="block text-sm font-semibold text-white/90 mb-3">Dark Tint Amount</span>
+                <div className="mb-2">
+                  <span className="text-xl font-mono text-purple-300">{(overLightDarkTint * 100).toFixed(0)}%</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value={overLightDarkTint} 
+                  onChange={(e) => setOverLightDarkTint(Number(e.target.value))} 
+                  className="w-full" 
+                />
+                <p className="text-xs text-white/50 mt-2">Darkness overlay opacity for better visibility on light backgrounds</p>
+              </div>
+
+              <div>
+                <span className="block text-sm font-semibold text-white/90 mb-3">Shadow Amount</span>
+                <div className="mb-2">
+                  <span className="text-xl font-mono text-green-300">{(overLightShadowAmount * 100).toFixed(0)}%</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value={overLightShadowAmount} 
+                  onChange={(e) => setOverLightShadowAmount(Number(e.target.value))} 
+                  className="w-full" 
+                />
+                <p className="text-xs text-white/50 mt-2">Shadow intensity for enhanced depth on bright backgrounds</p>
+              </div>
+            </div>
+          </div>
+
           {activeTab === "userInfo" && (
             <>
               <div>
@@ -254,10 +353,10 @@ export default function Home() {
               <div>
                 <span className="block text-sm font-semibold text-white/90 mb-3">Blur Amount</span>
                 <div className="mb-2">
-                  <span className="text-xl font-mono text-green-300">{blurAmount.toFixed(1)}</span>
+                  <span className="text-xl font-mono text-green-300">{blurAmount.toFixed(1)}px</span>
                 </div>
-                <input type="range" min="0" max="1" step="0.01" value={blurAmount} onChange={(e) => setBlurAmount(Number(e.target.value))} className="w-full" />
-                <p className="text-xs text-white/50 mt-2">Controls backdrop blur intensity</p>
+                <input type="range" min="0" max="50" step="0.1" value={blurAmount} onChange={(e) => setBlurAmount(Number(e.target.value))} className="w-full" />
+                <p className="text-xs text-white/50 mt-2">Controls backdrop blur intensity in pixels (0 = no blur)</p>
               </div>
 
               <div>
@@ -305,6 +404,105 @@ export default function Home() {
                   </label>
                 </div>
                 <p className="text-xs text-white/50 mt-2">Makes the glass darker for better visibility on light backgrounds</p>
+              </div>
+
+              <div>
+                <span className="block text-sm font-semibold text-white/90 mb-3">Overlay Color</span>
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs text-white/70">Red</span>
+                      <span className="text-sm font-mono text-red-300">{userInfoOverlayColor.r}</span>
+                    </div>
+                    <input 
+                      type="range" 
+                      min="0" 
+                      max="255" 
+                      step="1" 
+                      value={userInfoOverlayColor.r} 
+                      onChange={(e) => setUserInfoOverlayColor({...userInfoOverlayColor, r: Number(e.target.value)})} 
+                      className="w-full" 
+                    />
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs text-white/70">Green</span>
+                      <span className="text-sm font-mono text-green-300">{userInfoOverlayColor.g}</span>
+                    </div>
+                    <input 
+                      type="range" 
+                      min="0" 
+                      max="255" 
+                      step="1" 
+                      value={userInfoOverlayColor.g} 
+                      onChange={(e) => setUserInfoOverlayColor({...userInfoOverlayColor, g: Number(e.target.value)})} 
+                      className="w-full" 
+                    />
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs text-white/70">Blue</span>
+                      <span className="text-sm font-mono text-blue-300">{userInfoOverlayColor.b}</span>
+                    </div>
+                    <input 
+                      type="range" 
+                      min="0" 
+                      max="255" 
+                      step="1" 
+                      value={userInfoOverlayColor.b} 
+                      onChange={(e) => setUserInfoOverlayColor({...userInfoOverlayColor, b: Number(e.target.value)})} 
+                      className="w-full" 
+                    />
+                  </div>
+                  <div 
+                    className="w-full h-8 rounded border border-white/20" 
+                    style={{backgroundColor: `rgb(${userInfoOverlayColor.r}, ${userInfoOverlayColor.g}, ${userInfoOverlayColor.b})`}}
+                  />
+                </div>
+                <p className="text-xs text-white/50 mt-2">RGB color values for the full overlay</p>
+              </div>
+
+              <div>
+                <span className="block text-sm font-semibold text-white/90 mb-3">Overlay Amount</span>
+                <div className="mb-2">
+                  <span className="text-xl font-mono text-yellow-300">{(userInfoOverlayAmount * 100).toFixed(0)}%</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value={userInfoOverlayAmount} 
+                  onChange={(e) => setUserInfoOverlayAmount(Number(e.target.value))} 
+                  className="w-full" 
+                />
+                <p className="text-xs text-white/50 mt-2">Controls the opacity of the full color overlay</p>
+              </div>
+
+              <div>
+                <span className="block text-sm font-semibold text-white/90 mb-3">Overlay Blend Mode</span>
+                <div className="mb-2">
+                  <span className="text-sm font-mono text-green-300 capitalize">{userInfoOverlayBlendMode}</span>
+                </div>
+                <select 
+                  value={userInfoOverlayBlendMode} 
+                  onChange={(e) => setUserInfoOverlayBlendMode(e.target.value)}
+                  className="w-full p-2 bg-white/10 border border-white/20 rounded text-white text-sm"
+                >
+                  <option value="normal" className="bg-gray-800">Normal</option>
+                  <option value="multiply" className="bg-gray-800">Multiply</option>
+                  <option value="screen" className="bg-gray-800">Screen</option>
+                  <option value="overlay" className="bg-gray-800">Overlay</option>
+                  <option value="darken" className="bg-gray-800">Darken</option>
+                  <option value="lighten" className="bg-gray-800">Lighten</option>
+                  <option value="color-dodge" className="bg-gray-800">Color Dodge</option>
+                  <option value="color-burn" className="bg-gray-800">Color Burn</option>
+                  <option value="hard-light" className="bg-gray-800">Hard Light</option>
+                  <option value="soft-light" className="bg-gray-800">Soft Light</option>
+                  <option value="difference" className="bg-gray-800">Difference</option>
+                  <option value="exclusion" className="bg-gray-800">Exclusion</option>
+                </select>
+                <p className="text-xs text-white/50 mt-2">Controls how the overlay color blends with the glass effect</p>
               </div>
             </>
           )}
@@ -386,10 +584,10 @@ export default function Home() {
               <div>
                 <span className="block text-sm font-semibold text-white/90 mb-3">Blur Amount</span>
                 <div className="mb-2">
-                  <span className="text-xl font-mono text-green-300">{logoutBlurAmount.toFixed(1)}</span>
+                  <span className="text-xl font-mono text-green-300">{logoutBlurAmount.toFixed(1)}px</span>
                 </div>
-                <input type="range" min="0" max="1" step="0.01" value={logoutBlurAmount} onChange={(e) => setLogoutBlurAmount(Number(e.target.value))} className="w-full" />
-                <p className="text-xs text-white/50 mt-2">Controls backdrop blur intensity</p>
+                <input type="range" min="0" max="50" step="0.1" value={logoutBlurAmount} onChange={(e) => setLogoutBlurAmount(Number(e.target.value))} className="w-full" />
+                <p className="text-xs text-white/50 mt-2">Controls backdrop blur intensity in pixels (0 = no blur)</p>
               </div>
 
               <div>
@@ -437,6 +635,105 @@ export default function Home() {
                   </label>
                 </div>
                 <p className="text-xs text-white/50 mt-2">Makes the glass darker for better visibility on light backgrounds</p>
+              </div>
+
+              <div>
+                <span className="block text-sm font-semibold text-white/90 mb-3">Overlay Color</span>
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs text-white/70">Red</span>
+                      <span className="text-sm font-mono text-red-300">{logoutOverlayColor.r}</span>
+                    </div>
+                    <input 
+                      type="range" 
+                      min="0" 
+                      max="255" 
+                      step="1" 
+                      value={logoutOverlayColor.r} 
+                      onChange={(e) => setLogoutOverlayColor({...logoutOverlayColor, r: Number(e.target.value)})} 
+                      className="w-full" 
+                    />
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs text-white/70">Green</span>
+                      <span className="text-sm font-mono text-green-300">{logoutOverlayColor.g}</span>
+                    </div>
+                    <input 
+                      type="range" 
+                      min="0" 
+                      max="255" 
+                      step="1" 
+                      value={logoutOverlayColor.g} 
+                      onChange={(e) => setLogoutOverlayColor({...logoutOverlayColor, g: Number(e.target.value)})} 
+                      className="w-full" 
+                    />
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs text-white/70">Blue</span>
+                      <span className="text-sm font-mono text-blue-300">{logoutOverlayColor.b}</span>
+                    </div>
+                    <input 
+                      type="range" 
+                      min="0" 
+                      max="255" 
+                      step="1" 
+                      value={logoutOverlayColor.b} 
+                      onChange={(e) => setLogoutOverlayColor({...logoutOverlayColor, b: Number(e.target.value)})} 
+                      className="w-full" 
+                    />
+                  </div>
+                  <div 
+                    className="w-full h-8 rounded border border-white/20" 
+                    style={{backgroundColor: `rgb(${logoutOverlayColor.r}, ${logoutOverlayColor.g}, ${logoutOverlayColor.b})`}}
+                  />
+                </div>
+                <p className="text-xs text-white/50 mt-2">RGB color values for the full overlay</p>
+              </div>
+
+              <div>
+                <span className="block text-sm font-semibold text-white/90 mb-3">Overlay Amount</span>
+                <div className="mb-2">
+                  <span className="text-xl font-mono text-yellow-300">{(logoutOverlayAmount * 100).toFixed(0)}%</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value={logoutOverlayAmount} 
+                  onChange={(e) => setLogoutOverlayAmount(Number(e.target.value))} 
+                  className="w-full" 
+                />
+                <p className="text-xs text-white/50 mt-2">Controls the opacity of the full color overlay</p>
+              </div>
+
+              <div>
+                <span className="block text-sm font-semibold text-white/90 mb-3">Overlay Blend Mode</span>
+                <div className="mb-2">
+                  <span className="text-sm font-mono text-green-300 capitalize">{logoutOverlayBlendMode}</span>
+                </div>
+                <select 
+                  value={logoutOverlayBlendMode} 
+                  onChange={(e) => setLogoutOverlayBlendMode(e.target.value)}
+                  className="w-full p-2 bg-white/10 border border-white/20 rounded text-white text-sm"
+                >
+                  <option value="normal" className="bg-gray-800">Normal</option>
+                  <option value="multiply" className="bg-gray-800">Multiply</option>
+                  <option value="screen" className="bg-gray-800">Screen</option>
+                  <option value="overlay" className="bg-gray-800">Overlay</option>
+                  <option value="darken" className="bg-gray-800">Darken</option>
+                  <option value="lighten" className="bg-gray-800">Lighten</option>
+                  <option value="color-dodge" className="bg-gray-800">Color Dodge</option>
+                  <option value="color-burn" className="bg-gray-800">Color Burn</option>
+                  <option value="hard-light" className="bg-gray-800">Hard Light</option>
+                  <option value="soft-light" className="bg-gray-800">Soft Light</option>
+                  <option value="difference" className="bg-gray-800">Difference</option>
+                  <option value="exclusion" className="bg-gray-800">Exclusion</option>
+                </select>
+                <p className="text-xs text-white/50 mt-2">Controls how the overlay color blends with the glass effect</p>
               </div>
             </>
           )}
