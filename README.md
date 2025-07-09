@@ -1,8 +1,8 @@
 # Granular Liquid Glass React
 
-A React component that recreates Apple’s "liquid glass" effect with real refraction, chromatic aberration, and liquid-like elasticity.
+A React component that recreates Apple’s "liquid glass." You know what it is.
 
-> **Note:** This project is a community fork of [rdev/liquid-glass-react](https://github.com/rdev/liquid-glass-react). All credit for the original idea and implementation goes to the upstream author. My fork focuses on maintenance, granular configurability, and documentation improvements.
+> **Note:** This project is a fork of [rdev/liquid-glass-react](https://github.com/rdev/liquid-glass-react). All credit for the original idea and implementation goes to the upstream author. My fork focuses on maintenance, configurability, and documentation.
 
 ---
 
