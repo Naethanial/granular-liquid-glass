@@ -2,7 +2,7 @@
 
 A React component that recreates Apple’s "liquid glass" effect with real refraction, chromatic aberration, and liquid-like elasticity.
 
-> **Note:** This project is a community fork of [rdev/liquid-glass-react](https://github.com/rdev/liquid-glass-react). All credit for the original idea and implementation goes to the upstream author. This fork focuses on maintenance, granular configurability, and documentation improvements.
+> **Note:** This project is a community fork of [rdev/liquid-glass-react](https://github.com/rdev/liquid-glass-react). All credit for the original idea and implementation goes to the upstream author. My fork focuses on maintenance, granular configurability, and documentation improvements.
 
 ---
 
@@ -20,13 +20,13 @@ A live demo is available at the original author’s site: <https://liquid-glass.
 
 ## Features
 
-- ✨ Authentic liquid-glass distortion with edge bending & refraction
-- 🌈 Optional chromatic aberration
-- 🔄 Four refraction modes: `standard`, `polar`, `prominent`, `shader`
-- 🧊 Adjustable blur / frost, saturation, corner-radius & padding
-- 🐭 Mouse tracking with optional external container
-- 🪄 Elastic animations for touch & cursor interactions
-- 🌗 Works on both light and dark backgrounds
+- Liquid-glass distortion with edge bending & refraction
+- Chromatic aberration
+- Four refraction modes: `standard`, `polar`, `prominent`, `shader`
+- Adjustable blur / frost, saturation, corner-radius & padding
+- Mouse tracking with optional external container
+- Elastic animations for touch & cursor interactions
+- Works on both light and dark backgrounds
 
 ---
 
@@ -62,7 +62,7 @@ function App() {
   return (
     <LiquidGlass>
       <h1>Hello, Glass!</h1>
-      <p>This content is refracted through liquid glass ✨</p>
+      <p>This content is refracted through liquid glass!</p>
     </LiquidGlass>
   );
 }
@@ -173,7 +173,7 @@ npm run dev  # http://localhost:3000
 
 ## Contributing
 
-Pull requests and issue reports are welcome! ✨
+Pull requests and issue reports are welcome! 
 
 ## License
 
